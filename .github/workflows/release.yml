@@ -64,11 +64,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: 'Claude Workspace ${{ github.ref_name }}'
+          releaseName: 'Necode ${{ github.ref_name }}'
           releaseBody: |
-            ## Claude Workspace ${{ github.ref_name }}
+            ## Necode ${{ github.ref_name }}
 
-            Claude Code に特化したデスクトップエディター
+            Claude Codeに特化したデスクトップエディタ
 
             ### ダウンロード
             - **macOS (Apple Silicon)**: `.dmg` ファイル
