@@ -36,6 +36,30 @@
       overflow-x: hidden;
     }
 
+    /* === Notice Banner === */
+    .notice-banner {
+      position: fixed; top: 56px; left: 0; right: 0;
+      background: #fef3c7; border-bottom: 1px solid #f59e0b;
+      z-index: 99; padding: 10px 24px;
+    }
+    .notice-inner {
+      max-width: 1000px; margin: 0 auto;
+      font-size: 0.82rem; color: #92400e; line-height: 1.5;
+    }
+    .notice-inner summary {
+      cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;
+    }
+    .notice-inner code {
+      background: rgba(146, 64, 14, 0.1); padding: 2px 6px; border-radius: 4px;
+      font-size: 0.78rem; font-family: 'SF Mono', monospace; user-select: all;
+    }
+    .notice-inner ol { margin: 8px 0 0 18px; }
+    .notice-inner li { margin-bottom: 4px; }
+    .notice-close {
+      float: right; background: none; border: none; cursor: pointer;
+      font-size: 1.1rem; color: #92400e; padding: 0 4px;
+    }
+
     /* === Nav === */
     nav {
       position: fixed; top: 0; width: 100%;
@@ -72,7 +96,7 @@
 
     /* === Hero === */
     .hero {
-      padding: 140px 24px 80px;
+      padding: 180px 24px 80px;
       text-align: center; max-width: 720px; margin: 0 auto;
     }
     .hero-label {
@@ -248,6 +272,21 @@
       </div>
     </div>
   </nav>
+
+  <div class="notice-banner" id="noticeBanner">
+    <div class="notice-inner">
+      <button class="notice-close" onclick="document.getElementById('noticeBanner').style.display='none'">&times;</button>
+      <details open>
+        <summary>macOSで「壊れているため開けません」と表示される場合</summary>
+        <ol>
+          <li>DMGからアプリをApplicationsフォルダに移動</li>
+          <li>アプリを<strong>右クリック</strong> &rarr; 「開く」を選択</li>
+          <li>警告が出たら「開く」をクリック</li>
+        </ol>
+        <p>または、ターミナルで以下を実行：<br><code>xattr -cr /Applications/Necode.app</code></p>
+      </details>
+    </div>
+  </div>
 
   <section class="hero" id="download">
     <div class="hero-label">Beta &middot; 招待制</div>
