@@ -7,8 +7,6 @@
   <meta name="description" content="Claude Codeに特化したデスクトップエディタ。複数セッション、ファイル編集、チャットを1つのワークスペースで。">
   <meta property="og:title" content="Necode - Claude Code Desktop Editor">
   <meta property="og:description" content="Claude Codeに特化したデスクトップエディタ。複数セッション、ファイル編集、チャットを1つのワークスペースで。">
-  <meta property="og:image" content="icon.png">
-  <link rel="icon" type="image/png" href="icon-256.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,10 +23,10 @@
       --navy: #1a2744;
       --navy-light: #2a4a6e;
       --navy-glow: rgba(26, 39, 68, 0.08);
+      --green: #16a34a;
+      --red: #dc2626;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
@@ -40,9 +38,7 @@
 
     /* === Nav === */
     nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
+      position: fixed; top: 0; width: 100%;
       background: rgba(250, 249, 247, 0.8);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
@@ -50,40 +46,26 @@
       z-index: 100;
     }
     .nav-inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 56px;
-      padding: 0 24px;
+      max-width: 1000px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; padding: 0 24px;
     }
     .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 1.05rem;
-      text-decoration: none;
-      color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 700; font-size: 1.05rem;
+      text-decoration: none; color: var(--text);
     }
     .nav-logo span { color: var(--accent); }
     .nav-links { display: flex; gap: 20px; align-items: center; }
     .nav-links a {
-      text-decoration: none;
-      color: var(--text-sub);
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: color 0.15s;
+      text-decoration: none; color: var(--text-sub);
+      font-size: 0.85rem; font-weight: 500; transition: color 0.15s;
     }
     .nav-links a:hover { color: var(--text); }
     .nav-dl {
-      background: var(--navy) !important;
-      color: white !important;
-      padding: 6px 16px !important;
-      border-radius: 8px !important;
-      font-size: 0.8rem !important;
-      font-weight: 600 !important;
+      background: var(--navy) !important; color: white !important;
+      padding: 6px 16px !important; border-radius: 8px !important;
+      font-size: 0.8rem !important; font-weight: 600 !important;
       transition: background 0.15s !important;
     }
     .nav-dl:hover { background: var(--navy-light) !important; }
@@ -91,274 +73,154 @@
     /* === Hero === */
     .hero {
       padding: 140px 24px 80px;
-      text-align: center;
-      max-width: 720px;
-      margin: 0 auto;
+      text-align: center; max-width: 720px; margin: 0 auto;
     }
     .hero-label {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--accent);
-      background: rgba(224, 122, 74, 0.08);
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-bottom: 20px;
+      display: inline-block; font-size: 0.75rem; font-weight: 600;
+      color: var(--accent); background: rgba(224, 122, 74, 0.08);
+      padding: 4px 12px; border-radius: 20px; margin-bottom: 20px;
       letter-spacing: 0.02em;
     }
     .hero h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.15;
-      margin-bottom: 16px;
-      color: var(--navy);
+      font-size: 3rem; font-weight: 800; letter-spacing: -0.04em;
+      line-height: 1.15; margin-bottom: 16px; color: var(--navy);
     }
     .hero-sub {
-      font-size: 1.15rem;
-      color: var(--text-sub);
-      max-width: 480px;
-      margin: 0 auto 36px;
-      line-height: 1.7;
+      font-size: 1.15rem; color: var(--text-sub);
+      max-width: 480px; margin: 0 auto 36px; line-height: 1.7;
     }
+
+    /* === Access Code === */
+    .access-gate {
+      max-width: 400px; margin: 0 auto 24px;
+      display: flex; gap: 8px;
+    }
+    .access-gate input {
+      flex: 1; padding: 12px 16px; border: 1px solid var(--border);
+      border-radius: 10px; font-size: 0.9rem; font-family: inherit;
+      background: var(--bg-card); outline: none; transition: border-color 0.15s;
+    }
+    .access-gate input:focus { border-color: var(--navy-light); }
+    .access-gate input.error { border-color: var(--red); }
+    .access-gate input.success { border-color: var(--green); }
+    .access-gate button {
+      padding: 12px 20px; border-radius: 10px; border: none;
+      background: var(--navy); color: white; font-size: 0.9rem;
+      font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .access-gate button:hover { background: var(--navy-light); }
+    .access-msg {
+      font-size: 0.8rem; margin-top: 8px; min-height: 1.2em;
+    }
+    .access-msg.error { color: var(--red); }
+    .access-msg.success { color: var(--green); }
+
+    /* === Download Buttons (hidden by default) === */
     .hero-buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
+      display: none; gap: 12px; justify-content: center; flex-wrap: wrap;
+      margin-top: 24px;
     }
+    .hero-buttons.visible { display: flex; }
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.15s;
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 10px; font-size: 0.9rem;
+      font-weight: 600; text-decoration: none; transition: all 0.15s;
+      cursor: pointer; border: none; font-family: inherit;
     }
     .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
-    .btn-primary {
-      background: var(--navy);
-      color: white;
-    }
+    .btn-primary { background: var(--navy); color: white; }
     .btn-primary:hover {
-      background: var(--navy-light);
-      transform: translateY(-1px);
+      background: var(--navy-light); transform: translateY(-1px);
       box-shadow: 0 6px 20px var(--navy-glow);
     }
     .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
+      background: transparent; color: var(--text); border: 1px solid var(--border);
     }
-    .btn-ghost:hover {
-      border-color: var(--navy-light);
-      background: var(--bg-card);
-    }
-    .btn-muted {
-      background: var(--bg-card);
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-      cursor: default;
-      opacity: 0.65;
-    }
-    .badge {
-      font-size: 0.65rem;
-      background: var(--accent);
-      color: white;
-      padding: 2px 7px;
-      border-radius: 5px;
-      font-weight: 700;
-    }
+    .btn-ghost:hover { border-color: var(--navy-light); background: var(--bg-card); }
+    .btn-win { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
+    .btn-win:hover { border-color: var(--navy-light); background: var(--bg-card); }
     .hero-note {
-      margin-top: 16px;
-      font-size: 0.78rem;
-      color: var(--text-muted);
+      margin-top: 16px; font-size: 0.78rem; color: var(--text-muted);
+      display: none;
     }
+    .hero-note.visible { display: block; }
 
     /* === Features === */
-    .features {
-      padding: 80px 24px;
-      max-width: 960px;
-      margin: 0 auto;
-    }
+    .features { padding: 80px 24px; max-width: 960px; margin: 0 auto; }
     .section-label {
-      text-align: center;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
+      text-align: center; font-size: 0.75rem; font-weight: 600;
+      color: var(--accent); text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 8px;
     }
     .section-title {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 12px;
-      color: var(--navy);
+      text-align: center; font-size: 2rem; font-weight: 800;
+      letter-spacing: -0.03em; margin-bottom: 12px; color: var(--navy);
     }
     .section-desc {
-      text-align: center;
-      color: var(--text-sub);
-      max-width: 440px;
-      margin: 0 auto 48px;
-      font-size: 0.95rem;
+      text-align: center; color: var(--text-sub);
+      max-width: 440px; margin: 0 auto 48px; font-size: 0.95rem;
     }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .feature-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px 24px;
-      transition: all 0.2s;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 28px 24px; transition: all 0.2s;
     }
     .feature-card:hover {
       border-color: rgba(42, 74, 110, 0.25);
-      box-shadow: 0 4px 24px var(--navy-glow);
-      transform: translateY(-2px);
+      box-shadow: 0 4px 24px var(--navy-glow); transform: translateY(-2px);
     }
     .feature-icon-wrap {
-      width: 36px;
-      height: 36px;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 14px;
-      font-size: 0.9rem;
-      font-weight: 700;
+      width: 36px; height: 36px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px; font-size: 0.9rem; font-weight: 700;
       font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-      color: var(--navy);
-      background: rgba(26, 39, 68, 0.06);
+      color: var(--navy); background: rgba(26, 39, 68, 0.06);
     }
-    .feature-card h3 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--text);
-    }
-    .feature-card p {
-      font-size: 0.82rem;
-      color: var(--text-sub);
-      line-height: 1.6;
-    }
+    .feature-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+    .feature-card p { font-size: 0.82rem; color: var(--text-sub); line-height: 1.6; }
 
     /* === How it works === */
-    .howto {
-      padding: 60px 24px 80px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
+    .howto { padding: 60px 24px 80px; max-width: 800px; margin: 0 auto; }
+    .steps { display: flex; flex-direction: column; gap: 0; }
     .step {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-      padding: 24px 0;
-      border-bottom: 1px solid var(--border);
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 24px 0; border-bottom: 1px solid var(--border);
     }
     .step:last-child { border-bottom: none; }
     .step-num {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-      flex-shrink: 0;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--navy); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
     }
-    .step-text h4 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .step-text p {
-      font-size: 0.85rem;
-      color: var(--text-sub);
-    }
+    .step-text h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .step-text p { font-size: 0.85rem; color: var(--text-sub); }
 
     /* === Tech === */
-    .tech {
-      padding: 40px 24px 60px;
-      max-width: 700px;
-      margin: 0 auto;
-      text-align: center;
-    }
+    .tech { padding: 40px 24px 60px; max-width: 700px; margin: 0 auto; text-align: center; }
     .tech-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 16px;
+      font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px;
     }
-    .tech-tags {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+    .tech-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .tech-tag {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--text-sub);
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 8px; font-size: 0.8rem;
+      font-weight: 500; color: var(--text-sub);
     }
 
     /* === CTA === */
-    .cta {
-      padding: 80px 24px;
-      text-align: center;
-      background: var(--navy);
-      color: white;
-    }
-    .cta h2 {
-      font-size: 1.8rem;
-      font-weight: 800;
-      margin-bottom: 12px;
-      letter-spacing: -0.02em;
-    }
-    .cta p {
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 28px;
-      font-size: 1rem;
-    }
-    .cta .btn-primary {
-      background: var(--accent);
-    }
-    .cta .btn-primary:hover {
-      background: var(--accent-hover);
-    }
+    .cta { padding: 80px 24px; text-align: center; background: var(--navy); color: white; }
+    .cta h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.02em; }
+    .cta p { color: rgba(255,255,255,0.6); margin-bottom: 28px; font-size: 1rem; }
+    .cta .btn-primary { background: var(--accent); }
+    .cta .btn-primary:hover { background: var(--accent-hover); }
 
     /* === Footer === */
     footer {
-      padding: 24px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.78rem;
-      border-top: 1px solid var(--border);
+      padding: 24px; text-align: center; color: var(--text-muted);
+      font-size: 0.78rem; border-top: 1px solid var(--border);
     }
     footer a { color: var(--text-muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
@@ -377,9 +239,7 @@
 
   <nav>
     <div class="nav-inner">
-      <a href="#" class="nav-logo">
-        Ne<span>code</span>
-      </a>
+      <a href="#" class="nav-logo">Ne<span>code</span></a>
       <div class="nav-links">
         <a href="#features">機能</a>
         <a href="#howto">使い方</a>
@@ -390,23 +250,32 @@
   </nav>
 
   <section class="hero" id="download">
-    <div class="hero-label">Open Source &middot; MIT License</div>
+    <div class="hero-label">Beta &middot; 招待制</div>
     <h1>Claude Codeを、<br>もっと直感的に。</h1>
     <p class="hero-sub">Necodeは、Claude Codeに特化したデスクトップエディタ。<br>複数セッション、ファイル編集、チャットを<br>ひとつのワークスペースにまとめました。</p>
-    <div class="hero-buttons">
-      <a href="https://github.com/tsukihara-daijobu/claude-workspace/releases/latest/download/Necode_1.0.0_aarch64.dmg" class="btn btn-primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 0-7.743 16.33l-1.964 3.67 4.2-1.47A10 10 0 1 0 12 2Z"/></svg>
-        macOS版をダウンロード
+
+    <div class="access-gate" id="accessGate">
+      <input type="text" id="accessCode" placeholder="アクセスコードを入力" autocomplete="off">
+      <button onclick="checkCode()">確認</button>
+    </div>
+    <div class="access-msg" id="accessMsg"></div>
+
+    <div class="hero-buttons" id="downloadButtons">
+      <a href="https://github.com/tsukihara-daijobu/claude-workspace/releases/download/v1.2.0/Necode_1.0.0_aarch64.dmg" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        macOS (Apple Silicon)
       </a>
-      <span class="btn btn-muted">
-        Windows <span class="badge">準備中</span>
-      </span>
-      <a href="https://github.com/tsukihara-daijobu/claude-workspace" class="btn btn-ghost" target="_blank">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="16"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-        ソースコード
+      <a href="https://github.com/tsukihara-daijobu/claude-workspace/releases/download/v1.2.0/Necode_1.0.0_x64.dmg" class="btn btn-ghost">
+        macOS (Intel)
+      </a>
+      <a href="https://github.com/tsukihara-daijobu/claude-workspace/releases/download/v1.2.0/Necode_1.0.0_x64-setup.exe" class="btn btn-win">
+        Windows (.exe)
+      </a>
+      <a href="https://github.com/tsukihara-daijobu/claude-workspace/releases/download/v1.2.0/Necode_1.0.0_amd64.deb" class="btn btn-ghost">
+        Linux (.deb)
       </a>
     </div>
-    <p class="hero-note">macOS 10.15以降 &middot; Apple Silicon / Intel対応 &middot; Claude Codeのインストールが必要です</p>
+    <p class="hero-note" id="downloadNote">macOS 10.15以降 &middot; Apple Silicon / Intel対応 &middot; Claude Codeのインストールが必要です</p>
   </section>
 
   <section class="features" id="features">
@@ -463,7 +332,7 @@
         <div class="step-num">2</div>
         <div class="step-text">
           <h4>Necodeをダウンロード</h4>
-          <p>上のボタンからDMGをダウンロードし、Applicationsフォルダにドラッグ。</p>
+          <p>アクセスコードを入力して、お使いのOS用のインストーラーをダウンロード。</p>
         </div>
       </div>
       <div class="step">
@@ -491,14 +360,60 @@
   <section class="cta">
     <h2>Claude Codeを、みんなの手に。</h2>
     <p>CLIが得意な人も、そうでない人も。Necodeがあれば大丈夫。</p>
-    <a href="https://github.com/tsukihara-daijobu/claude-workspace/releases/latest/download/Necode_1.0.0_aarch64.dmg" class="btn btn-primary">
-      無料でダウンロード
-    </a>
+    <a href="#download" class="btn btn-primary">ダウンロードへ</a>
   </section>
 
   <footer>
     <p>Necode &copy; 2026 &mdash; <a href="https://github.com/tsukihara-daijobu/claude-workspace">GitHub</a> &mdash; MIT License</p>
   </footer>
+
+  <script>
+    // Simple hash check (not cryptographic security, just access control)
+    function hashCode(s) {
+      let h = 0;
+      for (let i = 0; i < s.length; i++) {
+        h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+      }
+      return h;
+    }
+
+    const VALID_HASH = -430344934; // hash of "neco-beta"
+
+    function checkCode() {
+      const input = document.getElementById('accessCode');
+      const msg = document.getElementById('accessMsg');
+      const code = input.value.trim().toLowerCase();
+
+      if (hashCode(code) === VALID_HASH) {
+        input.classList.remove('error');
+        input.classList.add('success');
+        msg.textContent = 'アクセスが確認されました';
+        msg.className = 'access-msg success';
+        document.getElementById('downloadButtons').classList.add('visible');
+        document.getElementById('downloadNote').classList.add('visible');
+        document.getElementById('accessGate').style.display = 'none';
+        msg.style.display = 'none';
+        sessionStorage.setItem('necode-access', '1');
+      } else {
+        input.classList.remove('success');
+        input.classList.add('error');
+        msg.textContent = 'コードが正しくありません';
+        msg.className = 'access-msg error';
+      }
+    }
+
+    // Enter key support
+    document.getElementById('accessCode').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkCode();
+    });
+
+    // Restore access if already verified in this session
+    if (sessionStorage.getItem('necode-access') === '1') {
+      document.getElementById('downloadButtons').classList.add('visible');
+      document.getElementById('downloadNote').classList.add('visible');
+      document.getElementById('accessGate').style.display = 'none';
+    }
+  </script>
 
 </body>
 </html>
