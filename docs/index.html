@@ -67,7 +67,7 @@
       text-decoration: none;
       color: var(--text);
     }
-    .nav-logo img { width: 28px; height: 28px; border-radius: 7px; }
+    .nav-logo span { color: var(--accent); }
     .nav-links { display: flex; gap: 20px; align-items: center; }
     .nav-links a {
       text-decoration: none;
@@ -94,13 +94,6 @@
       text-align: center;
       max-width: 720px;
       margin: 0 auto;
-    }
-    .hero-icon {
-      width: 96px;
-      height: 96px;
-      border-radius: 24px;
-      margin-bottom: 28px;
-      box-shadow: 0 12px 40px var(--navy-glow);
     }
     .hero-label {
       display: inline-block;
@@ -236,14 +229,17 @@
       transform: translateY(-2px);
     }
     .feature-icon-wrap {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 16px;
-      font-size: 1.2rem;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      color: var(--navy);
       background: rgba(26, 39, 68, 0.06);
     }
     .feature-card h3 {
@@ -382,8 +378,7 @@
   <nav>
     <div class="nav-inner">
       <a href="#" class="nav-logo">
-        <img src="icon-256.png" alt="Necode">
-        Necode
+        Ne<span>code</span>
       </a>
       <div class="nav-links">
         <a href="#features">機能</a>
@@ -395,7 +390,6 @@
   </nav>
 
   <section class="hero" id="download">
-    <img src="icon-256.png" alt="Necode" class="hero-icon">
     <div class="hero-label">Open Source &middot; MIT License</div>
     <h1>Claude Codeを、<br>もっと直感的に。</h1>
     <p class="hero-sub">Necodeは、Claude Codeに特化したデスクトップエディタ。<br>複数セッション、ファイル編集、チャットを<br>ひとつのワークスペースにまとめました。</p>
@@ -422,33 +416,33 @@
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon-wrap">&gt;_</div>
-        <h3>複数セッションを同時実行</h3>
-        <p>最大4つのClaude Codeを同時に動かせます。2x2のグリッドで全体を見渡しながら作業。</p>
+        <h3>複数セッション</h3>
+        <p>最大4つのClaude Codeセッションを同時実行。2x2グリッドで並べて作業できます。</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon-wrap">&lt;/&gt;</div>
-        <h3>エディタを内蔵</h3>
-        <p>Monaco Editorでコードを直接編集。CLIが生成したファイルをクリックひとつで開けます。</p>
+        <h3>内蔵エディタ</h3>
+        <p>Monaco Editorでコードを直接編集。生成されたファイルをクリックひとつで開けます。</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon-wrap">&#x1f4ac;</div>
+        <div class="feature-icon-wrap">~</div>
         <h3>チャットモード</h3>
-        <p>CLI表示とチャット表示をワンクリックで切替。CLIに慣れていなくても直感的に操作可能。</p>
+        <p>CLIとチャット表示をワンクリック切替。CLIに不慣れでも直感的に操作できます。</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon-wrap">&#x1f4ce;</div>
-        <h3>ドラッグ&ドロップ</h3>
-        <p>画像やファイルをチャットにドロップ。@でワークスペース内のファイルをすぐに参照。</p>
+        <div class="feature-icon-wrap">@</div>
+        <h3>ファイル参照</h3>
+        <p>画像やファイルをドラッグ&ドロップ。@メンションでワークスペース内のファイルを即参照。</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon-wrap">&#x26a1;</div>
-        <h3>スキル & MCP管理</h3>
-        <p>登録済みのスキルやMCPサーバーを一覧で確認。ワンクリックで実行・ON/OFF切替。</p>
+        <div class="feature-icon-wrap">/</div>
+        <h3>スキル & MCP</h3>
+        <p>登録済みのスキルやMCPサーバーを一覧で管理。ワンクリックで実行・ON/OFF切替。</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon-wrap">&#x1f4d6;</div>
-        <h3>Markdownプレビュー</h3>
-        <p>Notionのような見やすいプレビュー。編集とプレビューを切り替えながらドキュメントを作成。</p>
+        <div class="feature-icon-wrap">#</div>
+        <h3>MDプレビュー</h3>
+        <p>Notionライクなプレビュー。編集モードと切り替えながらドキュメントを仕上げられます。</p>
       </div>
     </div>
   </section>
