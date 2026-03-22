@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Necode - Claude Code Desktop Editor</title>
+  <meta name="description" content="Necode is a desktop editor built for Claude Code. Run multiple sessions, edit files, and chat - all in one workspace.">
+  <meta property="og:title" content="Necode - Claude Code Desktop Editor">
+  <meta property="og:description" content="Run multiple Claude Code sessions, edit files, and chat - all in one workspace.">
+  <meta property="og:image" content="icon.png">
+  <link rel="icon" type="image/png" href="icon-256.png">
+  <style>
+    :root {
+      --bg: #faf9f7;
+      --bg-card: #ffffff;
+      --text: #1a1a1a;
+      --text-sub: #6b6560;
+      --accent: #e07a4a;
+      --accent-hover: #c96838;
+      --border: #e8e4de;
+      --navy: #1a2744;
+      --navy-light: #2a4a6e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(250, 249, 247, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .nav-logo img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-sub);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* Hero */
+    .hero {
+      padding: 160px 2rem 100px;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 28px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 30px rgba(26, 39, 68, 0.15);
+    }
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-sub);
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--navy);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--navy-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(26, 39, 68, 0.2);
+    }
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--navy-light);
+      transform: translateY(-1px);
+    }
+    .btn-disabled {
+      background: var(--bg-card);
+      color: var(--text-sub);
+      border: 1px solid var(--border);
+      opacity: 0.7;
+      cursor: default;
+    }
+    .btn svg { width: 20px; height: 20px; }
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    /* Features */
+    .features {
+      padding: 80px 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .features h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 48px;
+      letter-spacing: -0.02em;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.2s;
+    }
+    .feature-card:hover {
+      border-color: var(--navy-light);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    /* Screenshot section */
+    .screenshot-section {
+      padding: 60px 2rem 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .screenshot-section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+    .screenshot-placeholder {
+      background: var(--navy);
+      border-radius: 16px;
+      padding: 40px;
+      color: white;
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 900px;
+      margin: 0 auto;
+      aspect-ratio: 16/10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .screenshot-placeholder span { font-size: 3rem; }
+
+    /* Tech stack */
+    .tech {
+      padding: 60px 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .tech h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+    .tech-tags {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tech-tag {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-sub);
+    }
+
+    /* CTA */
+    .cta {
+      padding: 80px 2rem;
+      text-align: center;
+      background: var(--navy);
+      color: white;
+      margin-top: 40px;
+    }
+    .cta h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .cta p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 32px;
+      font-size: 1.1rem;
+    }
+    .cta .btn-primary {
+      background: var(--accent);
+    }
+    .cta .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Footer */
+    footer {
+      padding: 32px 2rem;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--text-sub); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.2rem; }
+      .hero p { font-size: 1.05rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="icon-256.png" alt="Necode">
+        Necode
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="https://github.com/tsukihara-daijobu/claude-workspace" target="_blank">GitHub</a>
+        <a href="#download" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">Download</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero" id="download">
+    <img src="icon-256.png" alt="Necode" class="hero-icon">
+    <h1>Necode</h1>
+    <p>Claude Codeに特化したデスクトップエディタ。複数セッション、ファイル編集、チャットを1つのワークスペースで。</p>
+    <div class="hero-buttons">
+      <a href="https://github.com/tsukihara-daijobu/claude-workspace/releases/latest" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download for macOS
+      </a>
+      <span class="btn btn-disabled">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Windows
+        <span class="badge">Coming Soon</span>
+      </span>
+      <a href="https://github.com/tsukihara-daijobu/claude-workspace" class="btn btn-secondary" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        Source Code
+      </a>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <h2>Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">&gt;_</div>
+        <h3>Multiple Sessions</h3>
+        <p>最大4つのClaude Codeセッションを同時実行。2x2グリッドレイアウトで一覧性を確保。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&lt;/&gt;</div>
+        <h3>Built-in Editor</h3>
+        <p>Monaco Editorを内蔵。CLIで生成されたファイルをクリックでそのまま開いて編集。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1f4ac;</div>
+        <h3>Chat Mode</h3>
+        <p>CLI表示とチャット表示をワンクリックで切替。同じセッションをデスクトップアプリライクに操作。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1f4ce;</div>
+        <h3>Drag & Drop</h3>
+        <p>画像やファイルをチャットにドロップ。@メンションでワークスペース内のファイルを参照。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x26a1;</div>
+        <h3>Skills & MCP</h3>
+        <p>登録済みのスキルとMCPサーバーを可視化。ワンクリックでスキル実行、MCP管理。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1f4d6;</div>
+        <h3>Markdown Preview</h3>
+        <p>Notionライクなプレビュー表示。編集モードとプレビューを切り替えながらドキュメント作成。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="screenshot-section">
+    <h2>Workspace</h2>
+    <div class="screenshot-placeholder">
+      <span>&#x1f431;</span>
+      Screenshot coming soon
+    </div>
+  </section>
+
+  <section class="tech">
+    <h2>Tech Stack</h2>
+    <div class="tech-tags">
+      <span class="tech-tag">Tauri v2</span>
+      <span class="tech-tag">React 19</span>
+      <span class="tech-tag">TypeScript</span>
+      <span class="tech-tag">Rust</span>
+      <span class="tech-tag">Monaco Editor</span>
+      <span class="tech-tag">xterm.js</span>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Claude Codeをもっと使いやすく</h2>
+    <p>エンジニアも非エンジニアも、全員がClaude Codeの力を最大化できるエディタ。</p>
+    <a href="https://github.com/tsukihara-daijobu/claude-workspace/releases/latest" class="btn btn-primary">
+      Download Necode
+    </a>
+  </section>
+
+  <footer>
+    <p>Necode &copy; 2026 &mdash; <a href="https://github.com/tsukihara-daijobu/claude-workspace">GitHub</a> &mdash; MIT License</p>
+  </footer>
+
+</body>
+</html>
