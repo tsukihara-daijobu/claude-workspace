@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -184,6 +184,18 @@ function App() {
   // Terminal theme
   const [termTheme, setTermTheme] = useState<"dark" | "light">("dark");
 
+  // Sidebar resize
+  const [sidebarWidth, setSidebarWidth] = useState(230);
+  const isSidebarResizingRef = useRef(false);
+
+  // Terminal grid column resize (percentage of left column)
+  const [termColRatio, setTermColRatio] = useState(50);
+  const isTermResizingRef = useRef(false);
+
+  // Terminal grid row resize (percentage of top row)
+  const [termRowRatio, setTermRowRatio] = useState(50);
+  const isTermRowResizingRef = useRef(false);
+
   useEffect(() => {
     invoke<string>("get_home_dir").then((home) => {
       setHomePath(home);
@@ -193,6 +205,13 @@ function App() {
   }, []);
 
   useEffect(() => { loadHistory(); }, []);
+
+  // Fix activeTerminalId when it becomes stale
+  useEffect(() => {
+    if (terminals.length > 0 && (!activeTerminalId || !terminals.find(t => t.id === activeTerminalId))) {
+      setActiveTerminalId(terminals[terminals.length - 1].id);
+    }
+  }, [terminals, activeTerminalId]);
 
   // Close permission dropdown on outside click
   useEffect(() => {
@@ -243,18 +262,20 @@ function App() {
   useEffect(() => {
     const IMAGE_EXTS = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp"];
     let unlisten: (() => void) | null = null;
-    getCurrentWindow().onDragDropEvent((event) => {
-      if (event.payload.type === "drop") {
-        const paths = event.payload.paths;
-        for (const p of paths) {
-          const lower = p.toLowerCase();
-          if (IMAGE_EXTS.some((ext) => lower.endsWith(ext))) {
-            setDroppedImagePath(p);
-            return;
+    try {
+      getCurrentWindow().onDragDropEvent((event) => {
+        if (event.payload.type === "drop") {
+          const paths = event.payload.paths;
+          for (const p of paths) {
+            const lower = p.toLowerCase();
+            if (IMAGE_EXTS.some((ext) => lower.endsWith(ext))) {
+              setDroppedImagePath(p);
+              return;
+            }
           }
         }
-      }
-    }).then((fn) => { unlisten = fn; });
+      }).then((fn) => { unlisten = fn; });
+    } catch { /* not in Tauri */ }
     return () => { if (unlisten) unlisten(); };
   }, []);
 
@@ -300,11 +321,6 @@ function App() {
     const cmd = buildClaudeCommand(perm, resumeId);
     const now = Math.floor(Date.now() / 1000);
     setTerminals((prev) => {
-      if (prev.length >= 4) {
-        const newId = `term-${Date.now()}`;
-        setActiveTerminalId(newId);
-        return [...prev.slice(1), { id: newId, title, autoCommand: cmd, cwd, permissionMode: perm, resumeId, viewMode: "cli", claudeSessionId: resumeId, createdAt: now }];
-      }
       const id = `term-${Date.now()}`;
       setActiveTerminalId(id);
       return [...prev, { id, title, autoCommand: cmd, cwd, permissionMode: perm, resumeId, viewMode: "cli", claudeSessionId: resumeId, createdAt: now }];
@@ -314,12 +330,85 @@ function App() {
   const closeTerminal = useCallback((id: string) => {
     setTerminals((prev) => {
       const next = prev.filter((t) => t.id !== id);
+      // Update active terminal in the same state update cycle
       setActiveTerminalId((current) => {
         if (current !== id) return current;
-        return next.length > 0 ? next[next.length - 1].id : null;
+        if (next.length === 0) return null;
+        return next[next.length - 1].id;
       });
       return next;
     });
+  }, []);
+
+  // Sidebar resize handler
+  const handleSidebarDividerMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    isSidebarResizingRef.current = true;
+    const onMouseMove = (ev: MouseEvent) => {
+      if (!isSidebarResizingRef.current) return;
+      setSidebarWidth(Math.max(160, Math.min(400, ev.clientX)));
+    };
+    const onMouseUp = () => {
+      isSidebarResizingRef.current = false;
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+  }, []);
+
+  // Terminal grid column resize handler
+  const handleTermDividerMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    isTermResizingRef.current = true;
+    const gridEl = (e.target as HTMLElement).closest(".term-grid");
+    if (!gridEl) return;
+    const rect = gridEl.getBoundingClientRect();
+    const onMouseMove = (ev: MouseEvent) => {
+      if (!isTermResizingRef.current) return;
+      const pct = ((ev.clientX - rect.left) / rect.width) * 100;
+      setTermColRatio(Math.max(20, Math.min(80, pct)));
+    };
+    const onMouseUp = () => {
+      isTermResizingRef.current = false;
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+  }, []);
+
+  // Terminal grid row resize handler
+  const handleTermRowDividerMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    isTermRowResizingRef.current = true;
+    const gridEl = (e.target as HTMLElement).closest(".term-grid");
+    if (!gridEl) return;
+    const rect = gridEl.getBoundingClientRect();
+    const onMouseMove = (ev: MouseEvent) => {
+      if (!isTermRowResizingRef.current) return;
+      const pct = ((ev.clientY - rect.top) / rect.height) * 100;
+      setTermRowRatio(Math.max(20, Math.min(80, pct)));
+    };
+    const onMouseUp = () => {
+      isTermRowResizingRef.current = false;
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+    document.body.style.cursor = "row-resize";
+    document.body.style.userSelect = "none";
   }, []);
 
   // Panel resize handler
@@ -568,7 +657,13 @@ function App() {
       ? "term-grid-1"
       : terminals.length === 2
         ? "term-grid-2"
-        : "term-grid-4";
+        : terminals.length <= 4
+          ? "term-grid-4"
+          : terminals.length === 5
+            ? "term-grid-5"
+            : terminals.length <= 6
+              ? "term-grid-6"
+              : "term-grid-many";
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -578,7 +673,7 @@ function App() {
 
       <div className="workspace">
         {/* === サイドバー === */}
-        <div className="sidebar">
+        <div className="sidebar" style={{ width: sidebarWidth, minWidth: 160 }}>
           <div className="sidebar-toggle">
             <button
               className={`toggle-btn ${sidebarMode === "sessions" ? "active" : ""}`}
@@ -828,6 +923,8 @@ function App() {
           )}
         </div>
 
+        <div className="sidebar-divider" onMouseDown={handleSidebarDividerMouseDown} />
+
         {/* === メインエリア === */}
         <div className="main-area">
           {/* ファイルビューパネル */}
@@ -838,13 +935,14 @@ function App() {
                   key={tab.id}
                   className={`tab ${tab.id === activeFileTabId ? "active" : ""} ${dragTabId === tab.id ? "tab-dragging" : ""}`}
                   onClick={() => setActiveFileTabId(tab.id)}
+                  title={tab.filePath}
                   draggable
                   onDragStart={(e) => handleTabDragStart(e, tab.id)}
                   onDragOver={handleTabDragOver}
                   onDrop={(e) => handleTabDrop(e, tab.id)}
                   onDragEnd={() => setDragTabId(null)}
                 >
-                  <span>📄</span>
+                  <span title={tab.filePath}>📄</span>
                   <span className="tab-label">{tab.title}</span>
                   <span
                     className="tab-close"
@@ -989,9 +1087,31 @@ function App() {
                 </div>
               </div>
             ) : (
-              <div className={`term-grid ${termGridClass}`}>
-                {terminals.map((term) => (
-                  <div key={term.id} className="term-cell">
+              <div
+                className={`term-grid ${termGridClass}`}
+                style={
+                  terminals.length === 2
+                    ? { gridTemplateColumns: `${termColRatio}% 3px ${100 - termColRatio}%` }
+                    : terminals.length >= 3 && terminals.length <= 6
+                      ? { gridTemplateRows: `${termRowRatio}% 3px ${100 - termRowRatio}%` }
+                      : undefined
+                }
+              >
+                {terminals.map((term, idx) => (
+                  <React.Fragment key={term.id}>
+                    {/* Add column divider between the first and second column (2 terminals) */}
+                    {terminals.length === 2 && idx === 1 && (
+                      <div className="term-grid-divider" onMouseDown={handleTermDividerMouseDown} />
+                    )}
+                    {/* Add row divider between rows (3-6 terminals) */}
+                    {terminals.length >= 3 && terminals.length <= 6 && idx === (terminals.length <= 4 ? 2 : 3) && (
+                      <div
+                        className="term-grid-row-divider"
+                        onMouseDown={handleTermRowDividerMouseDown}
+                        style={{ gridColumn: "1 / -1" }}
+                      />
+                    )}
+                  <div className="term-cell">
                     <div className="term-cell-header">
                       <span className="term-cell-dot" />
                       <span className="term-cell-title">{term.title}</span>
@@ -1023,9 +1143,10 @@ function App() {
                           autoCommand={term.autoCommand}
                           onFileClick={handleTerminalFileClick}
                           theme={termTheme}
+                          visible={term.viewMode === "cli"}
                         />
                       </div>
-                      {term.viewMode === "chat" && (
+                      <div style={{ width: "100%", height: "100%", display: term.viewMode === "chat" ? "flex" : "none" }}>
                         <ChatView
                           terminalId={term.id}
                           sessionId={term.claudeSessionId}
@@ -1036,10 +1157,12 @@ function App() {
                           onStagedTextHandled={() => setPendingSkill(null)}
                           onSendMessage={(text) => sendChatMessage(term.id, text)}
                           onFileOpen={openFile}
+                          visible={term.viewMode === "chat"}
                         />
-                      )}
+                      </div>
                     </div>
                   </div>
+                  </React.Fragment>
                 ))}
               </div>
             )}

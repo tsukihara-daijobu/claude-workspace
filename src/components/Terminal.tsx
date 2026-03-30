@@ -60,13 +60,15 @@ interface TerminalProps {
   autoCommand?: string;
   onFileClick?: (filePath: string) => void;
   theme?: "dark" | "light";
+  visible?: boolean;
 }
 
-export default function Terminal({ id, cwd, autoCommand, onFileClick, theme = "dark" }: TerminalProps) {
+export default function Terminal({ id, cwd, autoCommand, onFileClick, theme = "dark", visible = true }: TerminalProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const xtermRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
   const termRef = useRef<XTerminal | null>(null);
+  const fitAddonRef = useRef<FitAddon | null>(null);
 
   // Update theme when it changes
   useEffect(() => {
@@ -74,6 +76,22 @@ export default function Terminal({ id, cwd, autoCommand, onFileClick, theme = "d
       termRef.current.options.theme = theme === "light" ? LIGHT_THEME : DARK_THEME;
     }
   }, [theme]);
+
+  // Re-fit when becoming visible again (e.g. switching from chat to CLI)
+  useEffect(() => {
+    if (visible && termRef.current && fitAddonRef.current) {
+      // Multiple attempts with increasing delays to ensure DOM is fully laid out
+      const attempts = [50, 150, 300];
+      attempts.forEach((delay) => {
+        setTimeout(() => {
+          try {
+            fitAddonRef.current?.fit();
+            termRef.current?.refresh(0, termRef.current.rows - 1);
+          } catch { /* */ }
+        }, delay);
+      });
+    }
+  }, [visible]);
 
   useEffect(() => {
     if (!wrapperRef.current || !xtermRef.current || initialized.current) return;
@@ -105,6 +123,7 @@ export default function Terminal({ id, cwd, autoCommand, onFileClick, theme = "d
         termRef.current = term;
 
         fitAddon = new FitAddon();
+        fitAddonRef.current = fitAddon;
         term.loadAddon(fitAddon);
 
         const webLinksAddon = new WebLinksAddon();

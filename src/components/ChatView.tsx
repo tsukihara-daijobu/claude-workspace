@@ -35,6 +35,7 @@ interface ChatViewProps {
   onStagedTextHandled?: () => void;
   onSendMessage: (text: string) => void;
   onFileOpen?: (path: string, name: string) => void;
+  visible?: boolean;
 }
 
 // Render text with clickable file paths
@@ -82,7 +83,7 @@ function TextWithFileLinks({ text, onFileOpen }: { text: string; onFileOpen?: (p
   );
 }
 
-export default function ChatView({ terminalId, sessionId, workspacePath, droppedImagePath, onDroppedImageHandled, stagedText, onStagedTextHandled, onSendMessage, onFileOpen }: ChatViewProps) {
+export default function ChatView({ terminalId, sessionId, workspacePath, droppedImagePath, onDroppedImageHandled, stagedText, onStagedTextHandled, onSendMessage, onFileOpen, visible = true }: ChatViewProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [pendingMessages, setPendingMessages] = useState<PendingMsg[]>([]);
   const [inputText, setInputText] = useState("");
@@ -107,7 +108,11 @@ export default function ChatView({ terminalId, sessionId, workspacePath, dropped
       const msgs = await invoke<ChatMessage[]>("read_session_messages", {
         sessionId,
       });
-      setMessages(msgs);
+      setMessages((prev) => {
+        // Only update if message count changed to avoid unnecessary re-renders
+        if (prev.length === msgs.length) return prev;
+        return msgs;
+      });
       if (msgs.length > 0) {
         setPendingMessages([]);
       }
@@ -116,19 +121,36 @@ export default function ChatView({ terminalId, sessionId, workspacePath, dropped
     }
   }, [sessionId]);
 
-  // Initial load + polling
+  // Initial load + polling (only when visible)
   useEffect(() => {
+    if (!visible) return;
     loadMessages();
     pollRef.current = setInterval(loadMessages, 1500);
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [loadMessages]);
+  }, [loadMessages, visible]);
 
-  // Auto-scroll to bottom
+  // Auto-scroll to bottom only when user is near the bottom
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const isNearBottomRef = useRef(true);
+
+  const handleMessagesScroll = useCallback(() => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const threshold = 80;
+    isNearBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
+  }, []);
+
+  const prevMessageCountRef = useRef(0);
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, pendingMessages]);
+    const newCount = messages.length + pendingMessages.length;
+    if (newCount > prevMessageCountRef.current && isNearBottomRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    prevMessageCountRef.current = newCount;
+  }, [messages.length, pendingMessages.length]);
 
   // Focus input on mount
   useEffect(() => {
@@ -174,6 +196,26 @@ export default function ChatView({ terminalId, sessionId, workspacePath, dropped
     };
     reader.readAsDataURL(file);
   }, []);
+
+  // Global paste handler for images when chat is active (captures before xterm)
+  useEffect(() => {
+    const handleGlobalPaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith("image/")) {
+          e.preventDefault();
+          e.stopPropagation();
+          const file = item.getAsFile();
+          if (file) processImageFile(file);
+          inputRef.current?.focus();
+          return;
+        }
+      }
+    };
+    document.addEventListener("paste", handleGlobalPaste, true);
+    return () => document.removeEventListener("paste", handleGlobalPaste, true);
+  }, [processImageFile]);
 
   // Handle paste event (Cmd+V / Ctrl+V)
   const handlePaste = useCallback(
@@ -479,7 +521,7 @@ export default function ChatView({ terminalId, sessionId, workspacePath, dropped
       )}
 
       {/* Messages */}
-      <div className="chat-messages">
+      <div className="chat-messages" ref={messagesContainerRef} onScroll={handleMessagesScroll}>
         {filteredMessages.length === 0 && pendingMessages.length === 0 && (
           <div className="chat-empty-inline">
             {!sessionId ? (

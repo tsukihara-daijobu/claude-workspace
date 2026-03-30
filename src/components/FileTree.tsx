@@ -58,10 +58,11 @@ function FileItem({
       className="file-tree-item"
       style={{ paddingLeft: 8 + depth * 16 }}
       onClick={() => onFileSelect(entry.path, entry.name)}
+      title={entry.path}
       draggable
       onDragStart={(e) => handleFileDragStart(e, entry)}
     >
-      <span className="file-tree-icon">{getFileIcon(entry)}</span>
+      <span className="file-tree-icon" title={entry.name}>{getFileIcon(entry)}</span>
       <span className="file-tree-name">{entry.name}</span>
       <span className="file-tree-size">{formatSize(entry.size)}</span>
     </div>
@@ -101,11 +102,12 @@ function DirectoryNode({
         className="file-tree-item"
         style={{ paddingLeft: 8 + depth * 16 }}
         onClick={toggle}
+        title={entry.path}
         draggable
         onDragStart={(e) => handleFileDragStart(e, entry)}
       >
         <span className="file-tree-arrow">{expanded ? "▼" : "▶"}</span>
-        <span className="file-tree-icon">📁</span>
+        <span className="file-tree-icon" title={entry.name}>📁</span>
         <span className="file-tree-name">{entry.name}</span>
       </div>
       {expanded && (
