@@ -124,6 +124,24 @@
   margin-right: 40px;
 }
 
+.chat-bubble-system {
+  align-self: center;
+  background: var(--bg-tertiary);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 4px 12px;
+  max-width: 60%;
+}
+
+.chat-system-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
 .chat-bubble-thinking {
   align-self: flex-start;
   background: var(--accent-subtle);

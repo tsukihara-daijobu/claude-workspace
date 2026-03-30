@@ -38,6 +38,26 @@ interface ChatViewProps {
   visible?: boolean;
 }
 
+// Detect system messages (hook feedback, task notifications, system reminders)
+function isSystemMessage(content: string): boolean {
+  return (
+    content.includes("<system-reminder>") ||
+    content.includes("<task-notification>") ||
+    content.includes("Stop hook feedback:") ||
+    content.includes("Stop:Callback hook") ||
+    content.includes("<user-prompt-submit-hook>")
+  );
+}
+
+// Extract a human-readable label for the system message type
+function getSystemLabel(content: string): string {
+  if (content.includes("<task-notification>")) return "Task Notification";
+  if (content.includes("Stop hook feedback:") || content.includes("Stop:Callback hook")) return "Hook Feedback";
+  if (content.includes("<system-reminder>")) return "System Reminder";
+  if (content.includes("<user-prompt-submit-hook>")) return "Hook";
+  return "System";
+}
+
 // Render text with clickable file paths
 function TextWithFileLinks({ text, onFileOpen }: { text: string; onFileOpen?: (path: string, name: string) => void }) {
   if (!onFileOpen) return <>{text}</>;
@@ -542,7 +562,16 @@ export default function ChatView({ terminalId, sessionId, workspacePath, dropped
             key={`msg-${i}`}
             className={`chat-msg chat-msg-${msg.role} chat-msg-type-${msg.msg_type}`}
           >
-            {msg.role === "user" && (
+            {msg.role === "user" && isSystemMessage(msg.content) && (
+              <div className="chat-bubble chat-bubble-system">
+                <div className="chat-bubble-avatar">⚙️</div>
+                <div className="chat-bubble-content">
+                  <div className="chat-system-label">{getSystemLabel(msg.content)}</div>
+                </div>
+              </div>
+            )}
+
+            {msg.role === "user" && !isSystemMessage(msg.content) && (
               <div className="chat-bubble chat-bubble-user">
                 <div className="chat-bubble-content">
                   <TextWithFileLinks text={msg.content} onFileOpen={onFileOpen} />
