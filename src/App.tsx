@@ -1135,8 +1135,8 @@ function App() {
                       </button>
                     </div>
                     <div className="term-cell-body">
-                      {/* CLIとChatの両方をDOMに保持 (display切替) */}
-                      <div style={{ width: "100%", height: "100%", display: term.viewMode === "cli" ? "block" : "none" }}>
+                      {/* CLIとChatの両方をDOMに保持 (absolute overlay で切替) */}
+                      <div style={{ position: "absolute", inset: 0, display: term.viewMode === "cli" ? "block" : "none" }}>
                         <Terminal
                           id={term.id}
                           cwd={term.cwd}
@@ -1146,7 +1146,7 @@ function App() {
                           visible={term.viewMode === "cli"}
                         />
                       </div>
-                      <div style={{ width: "100%", height: "100%", display: term.viewMode === "chat" ? "flex" : "none" }}>
+                      <div style={{ position: "absolute", inset: 0, display: term.viewMode === "chat" ? "flex" : "none" }}>
                         <ChatView
                           terminalId={term.id}
                           sessionId={term.claudeSessionId}
