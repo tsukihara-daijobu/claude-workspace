@@ -58,6 +58,34 @@ function getSystemLabel(content: string): string {
   return "System";
 }
 
+// System message bubble with expand/collapse
+function SystemBubble({ content }: { content: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const label = getSystemLabel(content);
+
+  // Clean up content for display: strip XML tags for readability
+  const cleanContent = content
+    .replace(/<\/?system-reminder>/g, "")
+    .replace(/<\/?task-notification>/g, "")
+    .replace(/<\/?[a-z-]+>/g, "")
+    .trim();
+
+  return (
+    <div className="chat-bubble chat-bubble-system" onClick={() => setExpanded(!expanded)}>
+      <div className="chat-bubble-avatar">⚙️</div>
+      <div className="chat-bubble-content">
+        <div className="chat-system-label">
+          {label}
+          <span className="chat-system-toggle">{expanded ? "▼" : "▶"}</span>
+        </div>
+        {expanded && (
+          <div className="chat-system-detail">{cleanContent}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Render text with clickable file paths
 function TextWithFileLinks({ text, onFileOpen }: { text: string; onFileOpen?: (path: string, name: string) => void }) {
   if (!onFileOpen) return <>{text}</>;
@@ -563,12 +591,7 @@ export default function ChatView({ terminalId, sessionId, workspacePath, dropped
             className={`chat-msg chat-msg-${msg.role} chat-msg-type-${msg.msg_type}`}
           >
             {msg.role === "user" && isSystemMessage(msg.content) && (
-              <div className="chat-bubble chat-bubble-system">
-                <div className="chat-bubble-avatar">⚙️</div>
-                <div className="chat-bubble-content">
-                  <div className="chat-system-label">{getSystemLabel(msg.content)}</div>
-                </div>
-              </div>
+              <SystemBubble content={msg.content} />
             )}
 
             {msg.role === "user" && !isSystemMessage(msg.content) && (

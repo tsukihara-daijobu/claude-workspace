@@ -133,6 +133,12 @@
   color: var(--text-muted);
   padding: 4px 12px;
   max-width: 60%;
+  cursor: pointer;
+  transition: background var(--duration-fast);
+}
+
+.chat-bubble-system:hover {
+  background: var(--bg-hover);
 }
 
 .chat-system-label {
@@ -140,6 +146,26 @@
   font-weight: 600;
   color: var(--text-muted);
   letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chat-system-toggle {
+  font-size: 8px;
+  opacity: 0.6;
+}
+
+.chat-system-detail {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  line-height: 1.4;
 }
 
 .chat-bubble-thinking {
