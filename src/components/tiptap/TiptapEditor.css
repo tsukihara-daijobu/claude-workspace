@@ -68,7 +68,7 @@
   margin: 1.2em 0 0.4em;
   padding-bottom: 4px;
   letter-spacing: -0.02em;
-  color: var(--text-heading);
+  color: #f0f0f2;
 }
 
 .tiptap-body .ProseMirror h1:first-child {
@@ -80,21 +80,21 @@
   font-weight: 600;
   margin: 1.4em 0 0.3em;
   padding-bottom: 2px;
-  color: var(--text-heading);
+  color: #f0f0f2;
 }
 
 .tiptap-body .ProseMirror h3 {
   font-size: 1.2em;
   font-weight: 600;
   margin: 1.2em 0 0.2em;
-  color: var(--text-heading);
+  color: #f0f0f2;
 }
 
 .tiptap-body .ProseMirror h4 {
   font-size: 1em;
   font-weight: 600;
   margin: 1em 0 0.2em;
-  color: var(--text-heading);
+  color: #f0f0f2;
 }
 
 /* Paragraph */
@@ -118,7 +118,7 @@
 }
 
 .tiptap-body .ProseMirror li::marker {
-  color: var(--text-muted);
+  color: #8b5cf6;
 }
 
 /* Task list (checkbox) */
@@ -140,7 +140,7 @@
 }
 
 .tiptap-body .ProseMirror ul[data-type="taskList"] li input[type="checkbox"] {
-  accent-color: var(--accent);
+  accent-color: #8b5cf6;
   transform: scale(1.1);
 }
 
@@ -148,9 +148,10 @@
 .tiptap-body .ProseMirror blockquote {
   margin: 0.8em 0;
   padding: 16px 20px;
-  background: var(--bg-callout);
-  border-radius: 6px;
-  border-left: 3px solid var(--accent);
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid #8b5cf6;
+  border-radius: 0 8px 8px 0;
+  backdrop-filter: blur(8px);
   font-size: 15px;
 }
 
@@ -160,8 +161,8 @@
 
 /* Inline code */
 .tiptap-body .ProseMirror code {
-  background: var(--bg-code-inline);
-  color: var(--text-code);
+  background: rgba(139, 92, 246, 0.1);
+  color: #c084fc;
   padding: 2px 6px;
   border-radius: 4px;
   font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
@@ -172,10 +173,10 @@
 /* Code block */
 .tiptap-body .ProseMirror pre {
   margin: 1em 0;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  background: var(--bg-code-block);
-  border: 1px solid var(--border);
+  background: #141418;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   padding: 16px;
   font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
   font-size: 13px;
@@ -199,22 +200,26 @@
   margin: 1em 0;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .tiptap-body .ProseMirror th {
   text-align: left;
   padding: 10px 14px;
   font-weight: 600;
-  font-size: 13px;
-  color: var(--text-secondary);
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.40);
+  background: #141418;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .tiptap-body .ProseMirror td {
   padding: 10px 14px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.64);
 }
 
 .tiptap-body .ProseMirror tr:last-child td {
@@ -223,20 +228,20 @@
 
 /* Links */
 .tiptap-body .ProseMirror a {
-  color: var(--accent);
+  color: #8b5cf6;
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.3);
   transition: border-color 0.15s;
 }
 
 .tiptap-body .ProseMirror a:hover {
-  border-bottom-color: var(--accent);
+  border-bottom-color: #8b5cf6;
 }
 
 /* Horizontal rule */
 .tiptap-body .ProseMirror hr {
   border: none;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   margin: 2em 0;
 }
 
@@ -244,7 +249,7 @@
 .tiptap-body .ProseMirror img {
   max-width: 100%;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
   margin: 1em 0;
 }
 
@@ -259,18 +264,18 @@
 
 .tiptap-body .ProseMirror s {
   text-decoration: line-through;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.40);
 }
 
 /* lowlight syntax highlighting */
-.tiptap-body .ProseMirror pre .hljs-keyword { color: #c678dd; }
-.tiptap-body .ProseMirror pre .hljs-string { color: #98c379; }
-.tiptap-body .ProseMirror pre .hljs-number { color: #d19a66; }
-.tiptap-body .ProseMirror pre .hljs-comment { color: #5c6370; font-style: italic; }
-.tiptap-body .ProseMirror pre .hljs-function { color: #61afef; }
-.tiptap-body .ProseMirror pre .hljs-title { color: #61afef; }
-.tiptap-body .ProseMirror pre .hljs-built_in { color: #e6c07b; }
-.tiptap-body .ProseMirror pre .hljs-type { color: #e6c07b; }
-.tiptap-body .ProseMirror pre .hljs-attr { color: #d19a66; }
-.tiptap-body .ProseMirror pre .hljs-variable { color: #e06c75; }
-.tiptap-body .ProseMirror pre .hljs-meta { color: #61afef; }
+.tiptap-body .ProseMirror pre .hljs-keyword { color: #c084fc; }
+.tiptap-body .ProseMirror pre .hljs-string { color: #86efac; }
+.tiptap-body .ProseMirror pre .hljs-number { color: #fbbf24; }
+.tiptap-body .ProseMirror pre .hljs-comment { color: rgba(255, 255, 255, 0.28); font-style: italic; }
+.tiptap-body .ProseMirror pre .hljs-function { color: #7dd3fc; }
+.tiptap-body .ProseMirror pre .hljs-title { color: #7dd3fc; }
+.tiptap-body .ProseMirror pre .hljs-built_in { color: #fcd34d; }
+.tiptap-body .ProseMirror pre .hljs-type { color: #fcd34d; }
+.tiptap-body .ProseMirror pre .hljs-attr { color: #fbbf24; }
+.tiptap-body .ProseMirror pre .hljs-variable { color: #fca5a5; }
+.tiptap-body .ProseMirror pre .hljs-meta { color: #7dd3fc; }
