@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { open } from "@tauri-apps/plugin-dialog";
+import { ask, open } from "@tauri-apps/plugin-dialog";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import MonacoEditor, { getLanguageFromPath } from "./components/MonacoEditor";
-import MarkdownPreview from "./components/MarkdownPreview";
+import TiptapEditor from "./components/tiptap/TiptapEditor";
 import FileTree from "./components/FileTree";
 import Terminal from "./components/Terminal";
 import ChatView from "./components/ChatView";
@@ -50,6 +50,8 @@ interface FileTab {
   title: string;
   filePath: string;
   content: string;
+  /** Content as last read from / written to disk. Used to detect unsaved edits. */
+  savedContent: string;
   viewMode: "code" | "preview";
 }
 
@@ -163,6 +165,31 @@ function App() {
   const [workspacePath, setWorkspacePath] = useState<string>("");
   const [defaultPermission, setDefaultPermission] = useState<PermissionMode>("default");
   const [statusMessage, setStatusMessage] = useState("");
+  const statusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Centralized status helper: replaces the scattered
+  // setStatusMessage(...) + setTimeout pattern with a single timer that
+  // is cleared on unmount and when a new message arrives.
+  const showStatus = useCallback((message: string, duration = 3000) => {
+    setStatusMessage(message);
+    if (statusTimerRef.current) {
+      clearTimeout(statusTimerRef.current);
+    }
+    if (duration > 0) {
+      statusTimerRef.current = setTimeout(() => {
+        setStatusMessage("");
+        statusTimerRef.current = null;
+      }, duration);
+    }
+  }, []);
+  // Clean up status timer on unmount
+  useEffect(() => {
+    return () => {
+      if (statusTimerRef.current) {
+        clearTimeout(statusTimerRef.current);
+        statusTimerRef.current = null;
+      }
+    };
+  }, []);
   const [droppedImagePath, setDroppedImagePath] = useState<string | null>(null);
   const [permDropdownTermId, setPermDropdownTermId] = useState<string | null>(null);
   const [filePanelWidth, setFilePanelWidth] = useState(40); // percentage
@@ -254,8 +281,7 @@ function App() {
           : t
       )
     );
-    setStatusMessage(`/${skillName} を入力欄にセット`);
-    setTimeout(() => setStatusMessage(""), 2000);
+    showStatus(`/${skillName} を入力欄にセット`, 2000);
   }, [terminals, activeTerminalId]);
 
   // Listen for system file drops (e.g. screenshots from Finder)
@@ -512,8 +538,11 @@ function App() {
 
   // Send message from chat to terminal PTY
   const sendChatMessage = useCallback((termId: string, text: string) => {
-    invoke("write_pty", { id: termId, data: text + "\r" }).catch(() => {});
-  }, []);
+    invoke("write_pty", { id: termId, data: text + "\r" }).catch((err) => {
+      console.error("write_pty (chat) failed:", err);
+      showStatus(`メッセージ送信に失敗: ${err}`, 4000);
+    });
+  }, [showStatus]);
 
   // Open a NEW terminal with different folder (keep old one)
   const openTerminalInFolder = useCallback(async (termId: string) => {
@@ -562,8 +591,7 @@ function App() {
         const path = typeof selected === "string" ? selected : selected;
         setWorkspacePath(path);
         saveWorkspace(path);
-        setStatusMessage(`Workspace: ${path}`);
-        setTimeout(() => setStatusMessage(""), 3000);
+        showStatus(`Workspace: ${path}`);
       }
     } catch (err) {
       console.error("Failed to open folder dialog:", err);
@@ -584,30 +612,43 @@ function App() {
         const content = await invoke<string>("read_file", { path: filePath });
         const id = `file-${Date.now()}`;
         const viewMode = isMarkdownFile(filePath) ? "preview" : "code";
-        setFileTabs((prev) => [...prev, { id, title: name, filePath, content, viewMode }]);
+        setFileTabs((prev) => [
+          ...prev,
+          { id, title: name, filePath, content, savedContent: content, viewMode },
+        ]);
         setActiveFileTabId(id);
-        setStatusMessage(`Opened ${name}`);
-        setTimeout(() => setStatusMessage(""), 3000);
+        showStatus(`Opened ${name}`);
       } catch (err) {
-        setStatusMessage(`Error: ${err}`);
-        setTimeout(() => setStatusMessage(""), 3000);
+        showStatus(`Error: ${err}`);
       }
+    },
+    [fileTabs, showStatus]
+  );
+
+  const closeFileTab = useCallback(
+    async (id: string) => {
+      // Unsaved-changes guard: if the tab has uncommitted edits, confirm.
+      const target = fileTabs.find((t) => t.id === id);
+      if (target && target.content !== target.savedContent) {
+        const ok = await ask(
+          `"${target.title}" には未保存の変更があります。閉じて変更を破棄しますか？`,
+          { title: "未保存の変更", kind: "warning" }
+        );
+        if (!ok) return;
+      }
+      setFileTabs((prev) => {
+        const idx = prev.findIndex((t) => t.id === id);
+        const next = prev.filter((t) => t.id !== id);
+        setActiveFileTabId((current) => {
+          if (current !== id) return current;
+          if (next.length === 0) return null;
+          return next[Math.min(idx, next.length - 1)].id;
+        });
+        return next;
+      });
     },
     [fileTabs]
   );
-
-  const closeFileTab = useCallback((id: string) => {
-    setFileTabs((prev) => {
-      const idx = prev.findIndex((t) => t.id === id);
-      const next = prev.filter((t) => t.id !== id);
-      setActiveFileTabId((current) => {
-        if (current !== id) return current;
-        if (next.length === 0) return null;
-        return next[Math.min(idx, next.length - 1)].id;
-      });
-      return next;
-    });
-  }, []);
 
   const saveFile = useCallback(
     async (content: string) => {
@@ -616,15 +657,16 @@ function App() {
       try {
         await invoke("write_file", { path: tab.filePath, content });
         setFileTabs((prev) =>
-          prev.map((t) => (t.id === tab.id ? { ...t, content } : t))
+          prev.map((t) =>
+            t.id === tab.id ? { ...t, content, savedContent: content } : t
+          )
         );
-        setStatusMessage(`Saved ${tab.title}`);
-        setTimeout(() => setStatusMessage(""), 3000);
+        showStatus(`Saved ${tab.title}`);
       } catch (err) {
-        setStatusMessage(`Error saving: ${err}`);
+        showStatus(`Error saving: ${err}`, 0);
       }
     },
-    [activeFileTabId, fileTabs]
+    [activeFileTabId, fileTabs, showStatus]
   );
 
   const updateFileContent = useCallback((tabId: string, content: string) => {
@@ -905,8 +947,7 @@ function App() {
                                 try {
                                   await invoke("toggle_mcp_server", { name: server.name, enabled: !server.enabled });
                                   loadMcpServers();
-                                  setStatusMessage(`${server.name} を${action}にしました（再起動が必要）`);
-                                  setTimeout(() => setStatusMessage(""), 4000);
+                                  showStatus(`${server.name} を${action}にしました（再起動が必要）`, 4000);
                                 } catch (err) { console.error(err); }
                               }
                             }}
@@ -930,28 +971,44 @@ function App() {
           {/* ファイルビューパネル */}
           <div className="file-panel" style={{ width: `${filePanelWidth}%`, minWidth: 200 }}>
             <div className="tab-bar">
-              {fileTabs.map((tab) => (
-                <div
-                  key={tab.id}
-                  className={`tab ${tab.id === activeFileTabId ? "active" : ""} ${dragTabId === tab.id ? "tab-dragging" : ""}`}
-                  onClick={() => setActiveFileTabId(tab.id)}
-                  title={tab.filePath}
-                  draggable
-                  onDragStart={(e) => handleTabDragStart(e, tab.id)}
-                  onDragOver={handleTabDragOver}
-                  onDrop={(e) => handleTabDrop(e, tab.id)}
-                  onDragEnd={() => setDragTabId(null)}
-                >
-                  <span title={tab.filePath}>📄</span>
-                  <span className="tab-label">{tab.title}</span>
-                  <span
-                    className="tab-close"
-                    onClick={(e) => { e.stopPropagation(); closeFileTab(tab.id); }}
+              {fileTabs.map((tab) => {
+                const isDirty = tab.content !== tab.savedContent;
+                return (
+                  <div
+                    key={tab.id}
+                    className={`tab ${tab.id === activeFileTabId ? "active" : ""} ${dragTabId === tab.id ? "tab-dragging" : ""}`}
+                    onClick={() => setActiveFileTabId(tab.id)}
+                    title={isDirty ? `${tab.filePath} (未保存)` : tab.filePath}
+                    draggable
+                    onDragStart={(e) => handleTabDragStart(e, tab.id)}
+                    onDragOver={handleTabDragOver}
+                    onDrop={(e) => handleTabDrop(e, tab.id)}
+                    onDragEnd={() => setDragTabId(null)}
                   >
-                    ×
-                  </span>
-                </div>
-              ))}
+                    <span title={tab.filePath}>📄</span>
+                    <span className="tab-label">
+                      {tab.title}
+                      {isDirty && (
+                        <span
+                          style={{ marginLeft: 4, color: "#d97706" }}
+                          aria-label="未保存"
+                        >
+                          ●
+                        </span>
+                      )}
+                    </span>
+                    <span
+                      className="tab-close"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        void closeFileTab(tab.id);
+                      }}
+                    >
+                      ×
+                    </span>
+                  </div>
+                );
+              })}
               {fileTabs.length === 0 && (
                 <div className="tab-placeholder">Files</div>
               )}
@@ -977,7 +1034,7 @@ function App() {
                   style={{ display: tab.id === activeFileTabId ? "flex" : "none" }}
                 >
                   {tab.viewMode === "preview" && isMarkdownFile(tab.filePath) ? (
-                    <MarkdownPreview
+                    <TiptapEditor
                       content={tab.content}
                       filePath={tab.filePath}
                       onChange={(val) => updateFileContent(tab.id, val)}

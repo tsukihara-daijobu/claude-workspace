@@ -33,7 +33,7 @@ export default function TiptapEditor({
     content,
     onUpdate: ({ editor }) => {
       isInternalUpdate.current = true;
-      const markdown = editor.storage.markdown.getMarkdown();
+      const markdown = (editor.storage as any).markdown.getMarkdown();
       onChange?.(markdown);
     },
     editorProps: {
@@ -41,7 +41,7 @@ export default function TiptapEditor({
         if ((event.metaKey || event.ctrlKey) && event.key === "s") {
           event.preventDefault();
           if (editor) {
-            const markdown = editor.storage.markdown.getMarkdown();
+            const markdown = (editor.storage as any).markdown.getMarkdown();
             onSave?.(markdown);
           }
           return true;
@@ -57,7 +57,7 @@ export default function TiptapEditor({
       isInternalUpdate.current = false;
       return;
     }
-    const currentMarkdown = editor.storage.markdown.getMarkdown();
+    const currentMarkdown = (editor.storage as any).markdown.getMarkdown();
     if (content !== currentMarkdown) {
       editor.commands.setContent(content);
     }

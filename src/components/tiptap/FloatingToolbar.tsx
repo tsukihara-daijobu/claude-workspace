@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { BubbleMenu, type Editor } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/react/menus";
+import type { Editor } from "@tiptap/core";
 import "./FloatingToolbar.css";
 
 interface FloatingToolbarProps {
@@ -60,8 +61,7 @@ export function FloatingToolbar({ editor }: FloatingToolbarProps) {
   return (
     <BubbleMenu
       editor={editor}
-      tippyOptions={{ duration: 150, placement: "top" }}
-      shouldShow={({ editor }) => {
+      shouldShow={({ editor }: { editor: Editor }) => {
         if (editor.isActive("codeBlock")) return false;
         const { from, to } = editor.state.selection;
         return from !== to;
