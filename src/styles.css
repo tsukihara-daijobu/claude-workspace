@@ -1,87 +1,90 @@
 :root {
-  /* === Design Tokens: Claude Workspace DS v1.1 === */
-  /* Concept: High-contrast, rounded, warm — Stripe×Linear inspired */
+  /* === Design Tokens: Necode DS v2.0 === */
+  /* Concept: Dark-first, glass morphism — Linear × Elipsee inspired */
 
-  /* Neutral palette — high contrast */
-  --neutral-0: #ffffff;
-  --neutral-25: #fafafa;
-  --neutral-50: #f5f5f4;
-  --neutral-100: #eeeded;
-  --neutral-150: #e5e4e2;
-  --neutral-200: #d6d5d2;
-  --neutral-300: #b8b6b2;
-  --neutral-400: #8a8784;
-  --neutral-500: #6b6966;
-  --neutral-600: #52504d;
-  --neutral-700: #3a3836;
-  --neutral-800: #1c1b1a;
-  --neutral-900: #0d0c0c;
+  /* Neutral palette — dark */
+  --neutral-0: #0a0a0c;
+  --neutral-25: #0e0e12;
+  --neutral-50: #111115;
+  --neutral-100: #141418;
+  --neutral-150: #1c1c22;
+  --neutral-200: #26262e;
+  --neutral-300: #36363e;
+  --neutral-400: rgba(255, 255, 255, 0.24);
+  --neutral-500: rgba(255, 255, 255, 0.40);
+  --neutral-600: rgba(255, 255, 255, 0.48);
+  --neutral-700: rgba(255, 255, 255, 0.64);
+  --neutral-800: #e4e5e9;
+  --neutral-900: #f0f0f2;
 
-  /* Primary (warm amber-orange — punchy) */
-  --primary-50: #fff5eb;
-  --primary-100: #ffe4c9;
-  --primary-400: #f28c38;
-  --primary-500: #ea6d1f;
-  --primary-600: #d15a14;
+  /* Primary (purple accent) */
+  --primary-50: rgba(139, 92, 246, 0.06);
+  --primary-100: rgba(139, 92, 246, 0.1);
+  --primary-400: #8b5cf6;
+  --primary-500: #8b5cf6;
+  --primary-600: #6366f1;
 
   /* Semantic surfaces */
-  --bg-primary: var(--neutral-0);
-  --bg-secondary: var(--neutral-50);
-  --bg-tertiary: var(--neutral-100);
-  --bg-surface: var(--neutral-0);
-  --bg-hover: var(--neutral-100);
-  --bg-active: var(--neutral-150);
+  --bg-primary: #0a0a0c;
+  --bg-secondary: #111115;
+  --bg-tertiary: #141418;
+  --bg-surface: #141418;
+  --bg-hover: rgba(255, 255, 255, 0.04);
+  --bg-active: rgba(255, 255, 255, 0.08);
 
-  /* Semantic text — stronger contrast */
-  --text-primary: var(--neutral-800);
-  --text-secondary: var(--neutral-500);
-  --text-muted: var(--neutral-400);
+  /* Semantic text */
+  --text-primary: #e4e5e9;
+  --text-secondary: rgba(255, 255, 255, 0.64);
+  --text-muted: rgba(255, 255, 255, 0.40);
+  --text-heading: #f0f0f2;
 
   /* Accent */
-  --accent: var(--primary-500);
-  --accent-hover: var(--primary-600);
-  --accent-light: rgba(234, 109, 31, 0.1);
-  --accent-subtle: var(--primary-50);
+  --accent: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --accent-light: rgba(139, 92, 246, 0.15);
+  --accent-subtle: rgba(139, 92, 246, 0.06);
 
   /* Status */
-  --accent-green: #16a34a;
-  --accent-red: #dc2626;
-  --accent-blue: #2563eb;
+  --accent-green: #22c55e;
+  --accent-red: #ef4444;
+  --accent-blue: #3b82f6;
 
-  /* Border — slightly stronger */
-  --border: var(--neutral-200);
-  --border-light: var(--neutral-150);
+  /* Border */
+  --border: rgba(255, 255, 255, 0.06);
+  --border-light: rgba(255, 255, 255, 0.04);
 
   /* Shadow */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 8px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
-  --shadow-focus: 0 0 0 3px rgba(234, 109, 31, 0.2);
+  --shadow-xs: 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-sm: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-md: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0,0,0,0.4);
+  --shadow-focus: 0 0 0 3px rgba(139, 92, 246, 0.15);
 
-  /* Radius — more rounded! */
-  --radius-sm: 8px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
   --radius-full: 9999px;
 
-  /* Layout */
+  /* Layout (keep same) */
   --titlebar-height: 40px;
-  --sidebar-width: 230px;
+  --sidebar-width: 220px;
   --header-height: 38px;
   --tab-height: 34px;
 
   /* Motion */
   --duration-fast: 100ms;
   --duration-base: 150ms;
+  --duration-slow: 250ms;
   --easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Code */
-  --bg-callout: var(--primary-50);
-  --bg-code-inline: var(--neutral-100);
-  --bg-code-block: var(--neutral-900);
-  --bg-code-header: var(--neutral-800);
-  --text-code: #c4704e;
+  --bg-callout: rgba(255, 255, 255, 0.03);
+  --bg-code-inline: rgba(139, 92, 246, 0.1);
+  --bg-code-block: #141418;
+  --bg-code-header: #1c1c22;
+  --text-code: #c084fc;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -89,7 +92,7 @@
 html, body, #root {
   height: 100%;
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
   font-size: 13px;
   color: var(--text-primary);
   background: var(--bg-primary);
@@ -201,7 +204,7 @@ html, body, #root {
 }
 
 .session-item:hover { background: var(--bg-hover); }
-.session-item.active { background: var(--bg-active); }
+.session-item.active { background: rgba(139, 92, 246, 0.1); }
 
 .session-title {
   font-size: 12px;
@@ -230,7 +233,7 @@ html, body, #root {
   flex-shrink: 0;
 }
 
-.session-status.running { background: var(--accent-green); box-shadow: 0 0 4px rgba(22,163,74,0.3); }
+.session-status.running { background: var(--accent-green); box-shadow: 0 0 6px rgba(34, 197, 94, 0.3); }
 .session-status.stopped { background: var(--text-muted); }
 
 .session-title-text {
@@ -385,7 +388,7 @@ html, body, #root {
   background: var(--border-light);
   flex-shrink: 0;
   cursor: col-resize;
-  transition: background 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
   position: relative;
 }
 
@@ -399,7 +402,7 @@ html, body, #root {
   bottom: 0;
 }
 
-.panel-divider:hover { background: var(--accent); }
+.panel-divider:hover { background: var(--accent); box-shadow: 0 0 8px rgba(139, 92, 246, 0.3); }
 
 .file-panel-toggle {
   position: absolute;
@@ -447,7 +450,18 @@ html, body, #root {
 }
 
 .tab:hover { background: var(--bg-hover); color: var(--text-primary); }
-.tab.active { color: var(--text-primary); background: var(--bg-primary); box-shadow: var(--shadow-xs); font-weight: 600; }
+.tab.active { color: var(--text-primary); background: var(--bg-primary); box-shadow: none; font-weight: 600; position: relative; }
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #8b5cf6, #6366f1);
+  border-radius: 2px 2px 0 0;
+}
 
 .tab-label {
   overflow: hidden;
@@ -562,16 +576,16 @@ html, body, #root {
 }
 
 .term-header-btn.primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
   color: white;
-  border-color: var(--accent);
+  border-color: transparent;
   border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-xs);
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.3), 0 2px 8px rgba(139, 92, 246, 0.2);
 }
 
 .term-header-btn.primary:hover {
-  background: var(--accent-hover);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.4), 0 4px 16px rgba(139, 92, 246, 0.25);
+  transform: translateY(-1px);
 }
 
 /* Terminal Grid */
@@ -789,6 +803,7 @@ html, body, #root {
   margin-top: 6px;
   z-index: 100;
   box-shadow: var(--shadow-md);
+  backdrop-filter: blur(16px);
 }
 
 .config-dropdown-item {
@@ -839,12 +854,12 @@ html, body, #root {
 .mcp-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.6);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
 }
 
 .mcp-modal {
@@ -1004,5 +1019,5 @@ html, body, #root {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 7px; height: 7px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--neutral-300); border-radius: var(--radius-full); }
-::-webkit-scrollbar-thumb:hover { background: var(--neutral-400); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.16); }
