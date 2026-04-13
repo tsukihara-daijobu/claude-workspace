@@ -1,20 +1,23 @@
-/* Floating Toolbar - Notion-style dark bubble menu */
+/* Floating Toolbar - Dark glass morphism bubble menu */
 .floating-toolbar {
   display: flex;
   align-items: center;
   gap: 2px;
-  background: var(--neutral-900, #1a1a1a);
+  background: #1c1c22;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
-  padding: 4px 6px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+  padding: 3px 4px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .floating-toolbar-btn {
   background: none;
   border: none;
-  color: #e0e0e0;
+  color: rgba(255, 255, 255, 0.40);
   font-size: 14px;
-  padding: 4px 8px;
+  padding: 5px 8px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: 600;
@@ -23,13 +26,13 @@
 }
 
 .floating-toolbar-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e4e5e9;
 }
 
 .floating-toolbar-btn.active {
-  background: rgba(255, 255, 255, 0.18);
-  color: #fff;
+  background: rgba(139, 92, 246, 0.15);
+  color: #8b5cf6;
 }
 
 .floating-toolbar-btn.italic {
@@ -48,7 +51,7 @@
 .floating-toolbar-divider {
   width: 1px;
   height: 20px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
   margin: 0 4px;
 }
 
@@ -57,10 +60,12 @@
 }
 
 .floating-toolbar-block-btn {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
   border: none;
-  color: #e0e0e0;
-  font-size: 13px;
+  color: rgba(255, 255, 255, 0.40);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.03em;
   padding: 4px 10px;
   border-radius: 5px;
   cursor: pointer;
@@ -68,17 +73,20 @@
 }
 
 .floating-toolbar-block-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.64);
 }
 
 .floating-toolbar-block-menu {
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  background: var(--neutral-900, #1a1a1a);
+  background: #1c1c22;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 4px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  backdrop-filter: blur(16px);
   z-index: 100;
   min-width: 120px;
 }
@@ -88,7 +96,7 @@
   width: 100%;
   background: none;
   border: none;
-  color: #e0e0e0;
+  color: rgba(255, 255, 255, 0.64);
   font-size: 13px;
   padding: 6px 12px;
   border-radius: 4px;
@@ -97,8 +105,8 @@
 }
 
 .floating-toolbar-block-item:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e4e5e9;
 }
 
 .floating-toolbar-link-input {
@@ -108,8 +116,8 @@
 }
 
 .floating-toolbar-link-input input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #fff;
   font-size: 13px;
   padding: 4px 8px;
@@ -119,13 +127,14 @@
 }
 
 .floating-toolbar-link-input input:focus {
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
 .floating-toolbar-link-input button {
   background: none;
   border: none;
-  color: #e0e0e0;
+  color: rgba(255, 255, 255, 0.64);
   font-size: 14px;
   padding: 4px 6px;
   cursor: pointer;
@@ -133,5 +142,5 @@
 }
 
 .floating-toolbar-link-input button:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
 }
