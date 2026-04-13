@@ -1,0 +1,276 @@
+/* TiptapEditor - Notion-like inline editing */
+.tiptap-preview {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+/* Toolbar */
+.tiptap-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.tiptap-toolbar-file {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.tiptap-toolbar-icon {
+  font-size: 14px;
+}
+
+/* Editor body */
+.tiptap-body {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* ProseMirror core */
+.tiptap-body .ProseMirror {
+  padding: 32px 48px 64px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  line-height: 1.7;
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  outline: none;
+  min-height: 100%;
+}
+
+/* Placeholder */
+.tiptap-body .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--text-muted);
+  pointer-events: none;
+  height: 0;
+}
+
+/* Headings */
+.tiptap-body .ProseMirror h1 {
+  font-size: 2em;
+  font-weight: 700;
+  margin: 1.2em 0 0.4em;
+  padding-bottom: 4px;
+  letter-spacing: -0.02em;
+  color: var(--text-heading);
+}
+
+.tiptap-body .ProseMirror h1:first-child {
+  margin-top: 0;
+}
+
+.tiptap-body .ProseMirror h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 1.4em 0 0.3em;
+  padding-bottom: 2px;
+  color: var(--text-heading);
+}
+
+.tiptap-body .ProseMirror h3 {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin: 1.2em 0 0.2em;
+  color: var(--text-heading);
+}
+
+.tiptap-body .ProseMirror h4 {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 1em 0 0.2em;
+  color: var(--text-heading);
+}
+
+/* Paragraph */
+.tiptap-body .ProseMirror p {
+  margin: 0.5em 0;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* Lists */
+.tiptap-body .ProseMirror ul,
+.tiptap-body .ProseMirror ol {
+  margin: 0.4em 0;
+  padding-left: 1.5em;
+}
+
+.tiptap-body .ProseMirror li {
+  margin: 0.2em 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.tiptap-body .ProseMirror li::marker {
+  color: var(--text-muted);
+}
+
+/* Task list (checkbox) */
+.tiptap-body .ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tiptap-body .ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.tiptap-body .ProseMirror ul[data-type="taskList"] li label {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.tiptap-body .ProseMirror ul[data-type="taskList"] li input[type="checkbox"] {
+  accent-color: var(--accent);
+  transform: scale(1.1);
+}
+
+/* Blockquote */
+.tiptap-body .ProseMirror blockquote {
+  margin: 0.8em 0;
+  padding: 16px 20px;
+  background: var(--bg-callout);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+  font-size: 15px;
+}
+
+.tiptap-body .ProseMirror blockquote p {
+  margin: 0.2em 0;
+}
+
+/* Inline code */
+.tiptap-body .ProseMirror code {
+  background: var(--bg-code-inline);
+  color: var(--text-code);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 0.88em;
+  font-weight: 500;
+}
+
+/* Code block */
+.tiptap-body .ProseMirror pre {
+  margin: 1em 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-code-block);
+  border: 1px solid var(--border);
+  padding: 16px;
+  font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.tiptap-body .ProseMirror pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  font-weight: normal;
+}
+
+/* Table */
+.tiptap-body .ProseMirror table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 1em 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.tiptap-body .ProseMirror th {
+  text-align: left;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.tiptap-body .ProseMirror td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tiptap-body .ProseMirror tr:last-child td {
+  border-bottom: none;
+}
+
+/* Links */
+.tiptap-body .ProseMirror a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.tiptap-body .ProseMirror a:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* Horizontal rule */
+.tiptap-body .ProseMirror hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2em 0;
+}
+
+/* Images */
+.tiptap-body .ProseMirror img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin: 1em 0;
+}
+
+/* Strong / Em / Strike */
+.tiptap-body .ProseMirror strong {
+  font-weight: 700;
+}
+
+.tiptap-body .ProseMirror em {
+  font-style: italic;
+}
+
+.tiptap-body .ProseMirror s {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* lowlight syntax highlighting */
+.tiptap-body .ProseMirror pre .hljs-keyword { color: #c678dd; }
+.tiptap-body .ProseMirror pre .hljs-string { color: #98c379; }
+.tiptap-body .ProseMirror pre .hljs-number { color: #d19a66; }
+.tiptap-body .ProseMirror pre .hljs-comment { color: #5c6370; font-style: italic; }
+.tiptap-body .ProseMirror pre .hljs-function { color: #61afef; }
+.tiptap-body .ProseMirror pre .hljs-title { color: #61afef; }
+.tiptap-body .ProseMirror pre .hljs-built_in { color: #e6c07b; }
+.tiptap-body .ProseMirror pre .hljs-type { color: #e6c07b; }
+.tiptap-body .ProseMirror pre .hljs-attr { color: #d19a66; }
+.tiptap-body .ProseMirror pre .hljs-variable { color: #e06c75; }
+.tiptap-body .ProseMirror pre .hljs-meta { color: #61afef; }
