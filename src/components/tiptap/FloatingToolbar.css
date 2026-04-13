@@ -1,0 +1,137 @@
+/* Floating Toolbar - Notion-style dark bubble menu */
+.floating-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--neutral-900, #1a1a1a);
+  border-radius: 8px;
+  padding: 4px 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+}
+
+.floating-toolbar-btn {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1;
+  transition: background 0.1s;
+}
+
+.floating-toolbar-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.floating-toolbar-btn.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.floating-toolbar-btn.italic {
+  font-style: italic;
+}
+
+.floating-toolbar-btn.strikethrough {
+  text-decoration: line-through;
+}
+
+.floating-toolbar-btn.code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+}
+
+.floating-toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 4px;
+}
+
+.floating-toolbar-block-selector {
+  position: relative;
+}
+
+.floating-toolbar-block-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #e0e0e0;
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.floating-toolbar-block-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.floating-toolbar-block-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: var(--neutral-900, #1a1a1a);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  min-width: 120px;
+}
+
+.floating-toolbar-block-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.floating-toolbar-block-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.floating-toolbar-link-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.floating-toolbar-link-input input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  outline: none;
+  width: 200px;
+}
+
+.floating-toolbar-link-input input:focus {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.floating-toolbar-link-input button {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 14px;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.floating-toolbar-link-input button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
